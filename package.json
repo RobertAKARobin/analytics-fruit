@@ -1,0 +1,16 @@
+{
+  "name": "fruit",
+  "version": "0.0.1",
+  "scripts": {
+		"build": "astro build",
+		"dev": "astro dev",
+		"lint": "astro check",
+		"preview": "astro preview",
+		"prod": "nodemon -e astro,jpg,js,png,scss,svg,ts --watch './src/*' --watch './public/*' --exec \"npm run build && http-server -c31536000 ./dist\""
+  },
+  "author": "RobertAKARobin",
+  "license": "ISC",
+  "dependencies": {
+    "astro": "^2.4.0"
+  }
+}
