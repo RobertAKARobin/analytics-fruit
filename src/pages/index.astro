@@ -1,0 +1,41 @@
+---
+import * as Const from 'src/js/const';
+
+import BaseLayout_ from 'src/layouts/base.astro';
+---
+
+<BaseLayout_>
+	<header>
+		<h1>Welcome to the {Const.companyName}</h1>
+
+		<h2>Our products:</h2>
+	</header>
+
+	<ul class="product-cards">
+		{
+			Const.products.map((product) =>
+				<li class="product-card">
+					<img
+						alt={`Picture of ${product.name}`}
+						class="product-card__image"
+						src={`img/${product.id}.jpg`}
+					/>
+
+					<div class="product-card__body">
+						<h3>{product.name}</h3>
+
+						<p>{product.description}</p>
+					</div>
+
+					<p><strong>${product.price}.00</strong></p>
+
+					<button
+						class="product-card__addtocart"
+						onclick={`handleAddtocart(event, '${product.id}')`}
+						type="button"
+					>Add to cart</button>
+				</li>
+			)
+		}
+	</ul>
+</BaseLayout_>
