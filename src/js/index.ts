@@ -1,4 +1,5 @@
 //#region State
+import { Cache } from './cache';
 import * as Const from './const';
 
 const products = Const.products;
@@ -10,19 +11,7 @@ const productsById = products.reduce((productsById, product) => {
 	return productsById;
 }, {});
 
-const cacheKey = `cart`;
-const cache = tryOrNull(() => JSON.parse(localStorage.getItem(cacheKey))) || {};
-
-function cacheSet() {
-	localStorage.setItem(cacheKey, JSON.stringify(cache));
-}
-
-function cacheClear() {
-	for (const property in cache) {
-		delete cache[property];
-	}
-	cacheSet();
-}
+const cartCache = new Cache<Record<Const.Product[`id`], number>>(`cart`);
 
 //#endregion
 
@@ -46,7 +35,7 @@ function render() {
 		totalQuantity: 0,
 	};
 
-	for (const [productId, quantity] of Object.entries(cache)) {
+	for (const [productId, quantity] of Object.entries(cartCache.val)) {
 		const cartProduct = {
 			...productsById[productId],
 			quantity,
@@ -77,17 +66,6 @@ function render() {
 
 //#endregion
 
-//#region Util
-function tryOrNull(callback) {
-	try {
-		return callback();
-	} catch {
-		return null;
-	}
-}
-
-//#endregion
-
 //#region Handlers
 Object.assign(window, {
 	handleAddtocart: (
@@ -104,11 +82,11 @@ Object.assign(window, {
 		$button.setAttribute(`disabled`, `disabled`);
 
 		setTimeout(() => {
-			cache[productId] = (cache[productId] || 0) + increment;
-			if (cache[productId] <= 0) {
-				delete cache[productId];
+			cartCache.val[productId] = (cartCache.val[productId] || 0) + increment;
+			if (cartCache.val[productId] <= 0) {
+				delete cartCache.val[productId];
 			}
-			cacheSet();
+			cartCache.persist();
 			render();
 			$button.removeAttribute(`disabled`);
 		}, latency);
@@ -123,7 +101,7 @@ Object.assign(window, {
 
 		$button.setAttribute(`disabled`, `disabled`);
 		setTimeout(() => {
-			cacheClear();
+			cartCache.clear();
 			render();
 			$button.removeAttribute(`disabled`);
 		}, latency);
@@ -138,7 +116,7 @@ Object.assign(window, {
 
 		$button.setAttribute(`disabled`, `disabled`);
 		setTimeout(() => {
-			cacheClear();
+			cartCache.clear();
 			location.href = `${baseHref}thanks`;
 		}, latency);
 	},
