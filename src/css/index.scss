@@ -1,12 +1,40 @@
 $bp: 600px;
 
-$color__cta: #a30;
-$color__cta__raise: #c40;
-$color__cta__sink: #920;
-$color__highlight: #cba;
-$color__lowlight: #720;
+@font-face {
+	font-family: '_Headline';
+	font-weight: 400;
+	src: url('/fonts/Bodoni LT Roman.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: '_Body';
+	font-weight: 300;
+	src: url('/fonts/Cera Pro Light.otf') format('opentype');
+}
+
+@font-face {
+	font-family: '_Body';
+	font-weight: 400;
+	src: url('/fonts/Cera Pro Medium.otf') format('opentype');
+}
+
+@font-face {
+	font-family: '_Body';
+	font-weight: 700;
+	src: url('/fonts/Cera Pro Bold.otf') format('opentype');
+}
+
+$color__brand: #E0086F;
+
+$color__bg: #F7F7F7;
+$color__cta: $color__brand;
+$color__cta__offset: #9F1958;
+$color__highlight: #D91671;
+$color__lowlight: #313131;
 $color__text: #000;
 $color__text__ondark: #fff;
+$font__body: '_Body', Arial, Helvetica, sans-serif;
+$font__headline: '_Headline', 'Times New Roman', Times, serif;
 
 $height__button: 40px;
 $height__navbar: 60px;
@@ -41,9 +69,9 @@ $margin__x: 16px;
 
 :root {
 	color: $color__text;
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: $font__body;
 	font-size: 18px;
-	font-weight: normal;
+	font-weight: 300;
 }
 
 html {
@@ -57,9 +85,10 @@ body {
 }
 
 main {
+	background-color: $color__bg;
 	flex-grow: 1;
 	min-height: 300px;
-	padding: $margin__x;
+	padding: $height__navbar calc(max(#{$margin__x}, .5 * (100vw - 1100px)));
 }
 
 header {
@@ -82,7 +111,7 @@ button {
 	transition: color .2s, background-color .2s;
 
 	&:hover:not(:disabled) {
-		background-color: $color__cta__raise;
+		background-color: $color__cta__offset;
 	}
 
 	&:disabled {
@@ -94,10 +123,11 @@ button {
 	&.button {
 		&--lowlight {
 			background-color: transparent;
-			color: $color__cta__sink;
+			color: $color__cta;
 
 			&:hover:not(:disabled) {
-				background-color: $color__highlight;
+				background-color: $color__cta__offset;
+				color: $color__text__ondark;
 			}
 
 			&:disabled {
@@ -106,6 +136,7 @@ button {
 		}
 
 		&--icon {
+			font-weight: bold;
 			padding: 0;
 			width: $height__button;
 		}
@@ -139,10 +170,37 @@ h3,
 h4,
 h5,
 h6 {
-	font-family: 'Times New Roman', Times, serif;
+	font-family: $font__headline;
+}
+
+a {
+	align-items: center;
+	color: $color__cta__offset;
+	display: inline-flex;
+	justify-content: center;
+	padding: 0 $margin__x;
+	text-decoration: none;
+	transition: color .2s;
+
+	&:hover {
+		color: $color__cta__offset;
+	}
+
+	.text--ondark & {
+		color: $color__text__ondark;
+
+		&:hover {
+			color: $color__highlight;
+		}
+	}
+}
+
+strong {
+	font-weight: bold;
 }
 
 table {
+	background-color: #FFFFFF;
 	border-collapse: collapse;
 	border-spacing: 0;
 	table-layout: fixed;
@@ -150,7 +208,8 @@ table {
 }
 
 th, td {
-	border: 1px solid #ccc;
+	border: 0;
+	height: 90px;
 	padding: ($margin__x * .5) $margin__x;
 	text-align: left;
 
@@ -161,34 +220,20 @@ th, td {
 	}
 }
 
+tr {
+	border-bottom: 1px solid #00000010;
+}
+
 thead th,
 tfoot th {
-	font-family: 'Times New Roman', Times, serif;
-	font-weight: bold;
-}
-
-a {
-	align-items: center;
-	color: $color__cta__sink;
-	display: inline-flex;
-	height: $height__navbar;
-	justify-content: center;
-	padding: 0 $margin__x;
-	text-decoration: none;
-	transition: color .2s;
-
-	&:hover {
-		color: $color__cta__raise;
-	}
-}
-
-strong {
+	font-family: $font__headline;
 	font-weight: bold;
 }
 
 .buttonset {
 	display: flex;
 	column-gap: $margin__x;
+	justify-content: center;
 }
 
 .footbar {
@@ -202,10 +247,20 @@ strong {
 
 .navbar {
 	align-items: center;
-	background-color: #fff;
+	background-color: #000000;
 	box-shadow: 0 0 0 2px $color__lowlight;
+	color: $color__text__ondark;
 	display: flex;
+	font-family: $font__headline;
+	left: 0;
+	position: fixed;
+	height: $height__navbar;
+	top: 0;
 	width: 100%;
+
+	&__logo {
+		font-family: $font__headline;
+	}
 
 	&__spacer {
 		flex-grow: 1;
@@ -220,8 +275,6 @@ strong {
 }
 
 .product-card {
-	border-radius: 10px;
-	box-shadow: 0 0 0 2px $color__highlight;
 	align-items: center;
 	display: flex;
 	flex-direction: column;
@@ -244,7 +297,7 @@ strong {
 
 [data-cart-counter]:not(:empty) {
 	align-items: center;
-	background-color: $color__lowlight;
+	background-color: $color__highlight;
 	border-radius: 50%;
 	bottom: .5em;
 	color: $color__text__ondark;
