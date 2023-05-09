@@ -14,7 +14,10 @@ import BaseLayout_ from 'src/layouts/base.astro';
 	<ul class="product-cards">
 		{
 			Const.products.map((product) =>
-				<li class="product-card">
+				<li
+					class="product-card"
+					data-product-display={product.id}
+				>
 					<img
 						alt={`Picture of ${product.name}`}
 						class="product-card__image"

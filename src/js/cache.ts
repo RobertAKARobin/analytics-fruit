@@ -3,8 +3,9 @@ export class Cache<CacheVal extends Record<string, unknown>> {
 
 	constructor (
 		public key: string,
+		initial?: CacheVal,
 	) {
-		this.val = tryOrNull(() => JSON.parse(localStorage.getItem(this.key))) || {};
+		this.val = tryOrNull(() => JSON.parse(localStorage.getItem(this.key))) || initial;
 	}
 
 	clear() {
