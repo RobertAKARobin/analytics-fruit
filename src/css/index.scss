@@ -1,5 +1,3 @@
-$bp: 600px;
-
 @font-face {
 	font-family: '_Headline';
 	font-weight: 400;
@@ -39,18 +37,6 @@ $font__headline: '_Headline', 'Times New Roman', Times, serif;
 $height__button: 40px;
 $height__navbar: 60px;
 $margin__x: 16px;
-
-@mixin bp-sm {
-	@media (max-width: #{$bp}) {
-		@content;
-	}
-}
-
-@mixin bp-lg {
-	@media (min-width: #{$bp + 1}) {
-		@content;
-	}
-}
 
 * {
 	background: transparent;
