@@ -13,5 +13,8 @@
   "dependencies": {
     "astro": "^2.4.0",
     "sass": "^1.62.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
   }
 }

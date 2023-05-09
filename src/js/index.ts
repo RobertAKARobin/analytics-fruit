@@ -1,5 +1,6 @@
 //#region State
 import * as Const from './const';
+
 const products = Const.products;
 
 const $base = document.querySelector(`base`);
@@ -40,7 +41,7 @@ render();
 
 function render() {
 	const state = {
-		cartProductsById: {},
+		cartProductsById: {} as Record<Const.Product[`id`], Const.Product>,
 		totalCost: 0,
 		totalQuantity: 0,
 	};
@@ -56,7 +57,7 @@ function render() {
 		state.totalCost += cartProduct.cost;
 	}
 
-	$cartCounter.textContent = state.totalQuantity === 0 ? '' : state.totalQuantity;
+	$cartCounter.textContent = `${state.totalQuantity === 0 ? '' : state.totalQuantity}`;
 
 	if ($cartProducts) {
 		let innerHTML = ``;
@@ -70,7 +71,7 @@ function render() {
 	}
 
 	if ($cartTotal) {
-		$cartTotal.textContent = state.totalCost;
+		$cartTotal.textContent = `${state.totalCost}`;
 	}
 }
 
@@ -88,53 +89,58 @@ function tryOrNull(callback) {
 //#endregion
 
 //#region Handlers
+Object.assign(window, {
+	handleAddtocart: (
+		event: MouseEvent,
+		productId: Const.Product[`id`],
+		increment = 1,
+	) => {
+		const $button = event.currentTarget as HTMLButtonElement;
 
-window.handleAddtocart = function(event, productId, increment = 1) {
-	const $button = event.currentTarget;
-
-	if ($button.getAttribute(`disabled`) === `disabled`) {
-		return;
-	}
-
-	$button.setAttribute(`disabled`, `disabled`);
-
-	setTimeout(() => {
-		cache[productId] = (cache[productId] || 0) + increment;
-		if (cache[productId] <= 0) {
-			delete cache[productId];
+		if ($button.getAttribute(`disabled`) === `disabled`) {
+			return;
 		}
-		cacheSet();
-		render();
-		$button.removeAttribute(`disabled`);
-	}, latency);
-}
 
-window.handleCartClear = function(event) {
-	const $button = event.currentTarget;
+		$button.setAttribute(`disabled`, `disabled`);
 
-	if ($button.getAttribute(`disabled`) === `disabled`) {
-		return;
-	}
+		setTimeout(() => {
+			cache[productId] = (cache[productId] || 0) + increment;
+			if (cache[productId] <= 0) {
+				delete cache[productId];
+			}
+			cacheSet();
+			render();
+			$button.removeAttribute(`disabled`);
+		}, latency);
+	},
 
-	$button.setAttribute(`disabled`, `disabled`);
-	setTimeout(() => {
-		cacheClear();
-		render();
-		$button.removeAttribute(`disabled`);
-	}, latency);
-}
+	handleCartClear: (event: MouseEvent) => {
+		const $button = event.currentTarget as HTMLButtonElement;
 
-window.handleCheckout = function(event) {
-	const $button = event.currentTarget;
+		if ($button.getAttribute(`disabled`) === `disabled`) {
+			return;
+		}
 
-	if ($button.getAttribute(`disabled`) === `disabled`) {
-		return;
-	}
+		$button.setAttribute(`disabled`, `disabled`);
+		setTimeout(() => {
+			cacheClear();
+			render();
+			$button.removeAttribute(`disabled`);
+		}, latency);
+	},
 
-	$button.setAttribute(`disabled`, `disabled`);
-	setTimeout(() => {
-		cacheClear();
-		location.href = `${baseHref}thanks`;
-	}, latency);
-}
+	handleCheckout: (event: MouseEvent) => {
+		const $button = event.currentTarget as HTMLButtonElement;
+
+		if ($button.getAttribute(`disabled`) === `disabled`) {
+			return;
+		}
+
+		$button.setAttribute(`disabled`, `disabled`);
+		setTimeout(() => {
+			cacheClear();
+			location.href = `${baseHref}thanks`;
+		}, latency);
+	},
+});
 //#endregion
